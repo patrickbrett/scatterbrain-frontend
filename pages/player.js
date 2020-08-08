@@ -2,10 +2,34 @@ import React, { Component } from "react";
 import PlayerManager from "../lib/PlayerManager";
 import Router from "next/router";
 
+const randomNames = [
+  "Patrick",
+  "Chance",
+  "Jacob",
+  "Naomi",
+  "Lidia",
+  "Preston",
+  "Julia",
+  "Kareem",
+  "Tiff",
+  "Jack",
+  "Ryan",
+  "Lachie",
+  "BG",
+  "Emile",
+  "Callum",
+  "Stuey",
+  "Jed",
+  "Sam",
+  "Elise"
+]
+
+const randomName = randomNames[Math.floor(Math.random() * (randomNames.length))];
+
 export default class Player extends Component {
   state = {
     gameCode: "",
-    playerName: "Patrick",
+    playerName: randomName,
     playerCode: null,
     isVip: null,
   };
@@ -43,7 +67,7 @@ export default class Player extends Component {
     if (event === "game-started") {
       const { gameCode, playerCode } = this.state;
 
-      Router.push(`/play/${gameCode}/${playerCode}`)
+      Router.push(`/play/[gameCode]/[playerCode]`, `/play/${gameCode}/${playerCode}`)
       return;
     }
   };

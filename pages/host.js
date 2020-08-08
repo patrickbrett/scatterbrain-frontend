@@ -30,7 +30,7 @@ export default class Host extends Component {
     const { gameCode, hostCode } = this.state;
 
     if (event === "game-started") {
-      Router.push(`/host/${gameCode}/${hostCode}`)
+      Router.push(`/host/[gameCode]/[hostCode]`, `/host/${gameCode}/${hostCode}`)
     }
   }
 
