@@ -41,7 +41,7 @@ export default class Player extends Component {
 
   updateGameCode = (e) => {
     const { value } = e.target;
-    this.setState({ gameCode: value });
+    this.setState({ gameCode: value.toUpperCase() });
   };
 
   updatePlayerName = (e) => {
