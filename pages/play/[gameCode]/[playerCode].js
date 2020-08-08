@@ -9,6 +9,7 @@ class PlayGame extends Component {
     categoryList: null,
     letter: null,
     roundStarted: false,
+    reviewStarted: false,
     listAnswers: [],
   };
 
@@ -45,6 +46,8 @@ class PlayGame extends Component {
       const { categoryList, letter } = data;
       const listAnswers = categoryList.categories.map(() => "");
       this.setState({ categoryList, letter, listAnswers, roundStarted: true });
+    } else if (event === "submissions-ready") {
+      this.setState({ roundStarted: false, reviewStarted: true });
     }
   };
 
@@ -59,7 +62,7 @@ class PlayGame extends Component {
     const { listAnswers } = this.state;
     const playerManager = PlayerManager.getInstance();
     playerManager.sendAnswers(listAnswers);
-  }
+  };
 
   render() {
     const { gameCode } = this.props.router.query;
@@ -69,16 +72,30 @@ class PlayGame extends Component {
       categoryList,
       letter,
       roundStarted,
-      listAnswers
+      reviewStarted,
+      listAnswers,
     } = this.state;
 
-    return (
-      <div>
+    const header = (
+      <>
         <div>Playing game</div>
         <div>Game code: {gameCode}</div>
         <div>
           Player name: {playerName} {isVip ? "(VIP)" : null}
         </div>
+      </>
+    );
+
+    if (reviewStarted) {
+      <div>
+        {header}
+        <div>Reviewing...</div>
+      </div>
+    }
+
+    return (
+      <div>
+        {header}
         {roundStarted ? (
           <div>
             <h3>{categoryList.name}</h3>

@@ -5,11 +5,14 @@ import HostManager from "../../../lib/HostManager";
 class HostGame extends Component {
   state = {
     roundStarted: false,
+    reviewStarted: false,
     categoryList: [],
     letter: null,
     players: [],
-    playersWhoHaveSubmitted: new Set()
-  }
+    playersWhoHaveSubmitted: new Set(),
+    activeRoundReview: null,
+    reviewQuestionIndex: 0,
+  };
 
   componentDidMount() {
     const hostManager = HostManager.getInstance();
@@ -18,7 +21,7 @@ class HostGame extends Component {
     if (hostManager.gameCode) {
       this.startRound();
       const { players } = hostManager;
-      this.setState({ players })
+      this.setState({ players });
     }
   }
 
@@ -28,57 +31,138 @@ class HostGame extends Component {
     if (!gameCode || !hostCode) return;
 
     const hostManager = HostManager.getInstance();
-    if (!hostManager.gameCode) { // host manager has lost game info, get it back
+    if (!hostManager.gameCode) {
+      // host manager has lost game info, get it back
       hostManager.refetchGameInfo(gameCode, hostCode);
     }
   }
 
   socketListener = (data) => {
     const { event } = data;
-    if (event === 'reload-host-accepted') {
+    if (event === "reload-host-accepted") {
       const { players } = data;
       this.startRound();
-      this.setState({ players })
-    } else if (event === 'player-has-submitted') {
+      this.setState({ players });
+    } else if (event === "player-has-submitted") {
       const { playerName } = data;
       console.log(playerName);
       const { playersWhoHaveSubmitted } = this.state;
       playersWhoHaveSubmitted.add(playerName);
       this.setState({ playersWhoHaveSubmitted });
-    } else if (event === 'submissions-ready') {
-      // TODO
+    } else if (event === "submissions-ready") {
+      const activeRoundReview = data.activeRound;
+      this.setState({
+        activeRoundReview,
+        reviewStarted: true,
+        roundStarted: false,
+        reviewQuestionIndex: 0,
+      });
     }
-  }
+  };
+
+  reviewNext = () => {
+    if (this.state.reviewQuestionIndex < this.state.categoryList.categories.length - 1) {
+      this.setState((prevState) => ({
+        reviewQuestionIndex: prevState.reviewQuestionIndex + 1,
+      }));
+    } else {
+      this.startRound();
+    }
+  };
 
   startRound = async () => {
-    console.log('starting round!')
+    console.log("starting round!");
     const hostManager = HostManager.getInstance();
     const { categoryList, letter } = await hostManager.requestRoundStart();
-    this.setState({ roundStarted: true, categoryList, letter })
-  }
+    this.setState({ reviewStarted: false, roundStarted: true, categoryList, letter });
+  };
 
   render() {
     const { gameCode } = this.props.router.query;
-    const { roundStarted, categoryList, letter, players, playersWhoHaveSubmitted } = this.state;
+    const {
+      roundStarted,
+      reviewStarted,
+      categoryList,
+      letter,
+      players,
+      playersWhoHaveSubmitted,
+      activeRoundReview,
+      reviewQuestionIndex,
+    } = this.state;
 
-    console.log('p', players);
+    const header = (
+      <>
+        <div>Hosting game</div>
+        <div>Game code: {gameCode}</div>
+      </>
+    );
+
+    if (!reviewStarted) {
+      return (
+        <div>
+          {header}
+          {roundStarted ? (
+            <div>
+              <h3>{categoryList.name}</h3>
+              <p>Letter: {letter}</p>
+              <ol>
+                {categoryList.categories.map((cat) => (
+                  <li key={cat}>{cat}</li>
+                ))}
+              </ol>
+              <div>
+                <ul>
+                  {players.map((player) => (
+                    <li>
+                      {player.playerName} {player.isVip ? "(VIP)" : null}{" "}
+                      {playersWhoHaveSubmitted.has(player.playerName)
+                        ? "(SUBMITTED)"
+                        : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div>Round starting in a few seconds...</div>
+          )}
+        </div>
+      );
+    }
+
+    const qAndA = activeRoundReview.categoryList.categories.map((cat, i) => {
+      const answersByPlayer = Object.values(activeRoundReview.submissions);
+      const answers = answersByPlayer.map((playerAnswer) => ({
+        playerName: playerAnswer.playerName,
+        answer: playerAnswer.answers[i],
+      }));
+
+      return {
+        question: cat,
+        answers,
+      };
+    });
+
+    console.log(qAndA);
 
     return (
       <div>
-        <div>Hosting game</div>
-        <div>Game code: {gameCode}</div>
-        {roundStarted ? (<div>
-          <h3>{categoryList.name}</h3>
-          <p>Letter: {letter}</p>
-          <ol>
-            {categoryList.categories.map(cat => <li key={cat}>{cat}</li>)}
-          </ol>
+        {header}
+        <div>{JSON.stringify(activeRoundReview)}</div>
+        <div>
+          <h3>Question {reviewQuestionIndex + 1}</h3>
+          <div>{qAndA[reviewQuestionIndex].question}</div>
           <div>
-            <ul>
-              {players.map(player => <li>{player.playerName} {player.isVip ? '(VIP)' : null} {playersWhoHaveSubmitted.has(player.playerName) ? '(SUBMITTED)' : null}</li>)}
-            </ul>
+            {qAndA[reviewQuestionIndex].answers.map((answer) => (
+              <div>
+                {answer.playerName}: {answer.answer}
+              </div>
+            ))}
           </div>
-        </div>) : (<div>Round starting in a few seconds...</div>)}
+        </div>
+        <div>
+          <button onClick={this.reviewNext}>Next</button>
+        </div>
       </div>
     );
   }
