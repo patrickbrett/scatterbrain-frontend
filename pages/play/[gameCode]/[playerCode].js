@@ -5,15 +5,22 @@ import PlayerManager from "../../../lib/PlayerManager";
 class PlayGame extends Component {
   state = {
     playerName: null,
-    isVip: null
-  }
+    isVip: null,
+    categoryList: null,
+    letter: null,
+    roundStarted: false,
+    listAnswers: [],
+  };
 
   componentDidMount() {
     const playerManager = PlayerManager.getInstance();
     playerManager.setSocketListener(this.socketListener);
 
     if (playerManager.gameCode) {
-      this.setState({ playerName: playerManager.playerName, isVip: playerManager.isVip });
+      this.setState({
+        playerName: playerManager.playerName,
+        isVip: playerManager.isVip,
+      });
     }
   }
 
@@ -23,28 +30,78 @@ class PlayGame extends Component {
     if (!gameCode || !playerCode) return;
 
     const playerManager = PlayerManager.getInstance();
-    if (!playerManager.gameCode) { // player manager has lost game info, get it back
+    if (!playerManager.gameCode) {
+      // player manager has lost game info, get it back
       playerManager.refetchGameInfo(gameCode, playerCode);
     }
   }
 
   socketListener = (data) => {
     const { event } = data;
-    if (event === 'reload-player-accepted') {
+    if (event === "reload-player-accepted") {
       const { playerName, isVip } = data;
-      this.setState({ playerName, isVip })
+      this.setState({ playerName, isVip });
+    } else if (event === "start-round") {
+      const { categoryList, letter } = data;
+      const listAnswers = categoryList.categories.map(() => "");
+      this.setState({ categoryList, letter, listAnswers, roundStarted: true });
     }
+  };
+
+  updateListAnswer(e, index) {
+    const { value } = e.target;
+    const { listAnswers } = this.state;
+    listAnswers[index] = value;
+    this.setState({ listAnswers });
+  }
+
+  sendAnswers = () => {
+    const { listAnswers } = this.state;
+    const playerManager = PlayerManager.getInstance();
+    playerManager.sendAnswers(listAnswers);
   }
 
   render() {
     const { gameCode } = this.props.router.query;
-    const { playerName, isVip } = this.state;
+    const {
+      playerName,
+      isVip,
+      categoryList,
+      letter,
+      roundStarted,
+      listAnswers
+    } = this.state;
 
     return (
       <div>
         <div>Playing game</div>
         <div>Game code: {gameCode}</div>
-        <div>Player name: {playerName} {isVip ? '(VIP)' : null}</div>
+        <div>
+          Player name: {playerName} {isVip ? "(VIP)" : null}
+        </div>
+        {roundStarted ? (
+          <div>
+            <h3>{categoryList.name}</h3>
+            <p>Letter: {letter}</p>
+            <ol>
+              {categoryList.categories.map((cat, i) => (
+                <li key={cat}>
+                  {cat}{" "}
+                  <input
+                    type="text"
+                    value={listAnswers[i]}
+                    onChange={(e) => this.updateListAnswer(e, i)}
+                  />
+                </li>
+              ))}
+            </ol>
+            <div>
+              <button onClick={this.sendAnswers}>I'm done</button>
+            </div>
+          </div>
+        ) : (
+          <div>Waiting for round to start...</div>
+        )}
       </div>
     );
   }
