@@ -40,17 +40,23 @@ class HostGame extends Component {
 
   socketListener = (data) => {
     const { event } = data;
+
     if (event === "reload-host-accepted") {
+
       const { players } = data;
       this.startRound();
       this.setState({ players });
+
     } else if (event === "player-has-submitted") {
+
       const { playerName } = data;
       console.log(playerName);
       const { playersWhoHaveSubmitted } = this.state;
       playersWhoHaveSubmitted.add(playerName);
       this.setState({ playersWhoHaveSubmitted });
+
     } else if (event === "submissions-ready") {
+      
       const activeRoundReview = data.activeRound;
       this.setState({
         activeRoundReview,
@@ -58,11 +64,24 @@ class HostGame extends Component {
         roundStarted: false,
         reviewQuestionIndex: 0,
       });
+
+    } else if (event === 'marked-answer') {
+
+      const { submissions } = data;
+      this.setState(prevState => {
+        const { activeRoundReview } = prevState;
+        activeRoundReview.submissions = submissions;
+        return { activeRoundReview };
+      })
+
     }
   };
 
   reviewNext = () => {
     if (this.state.reviewQuestionIndex < this.state.categoryList.categories.length - 1) {
+      const hostManager = HostManager.getInstance();
+      hostManager.reviewNext(this.state.reviewQuestionIndex);
+
       this.setState((prevState) => ({
         reviewQuestionIndex: prevState.reviewQuestionIndex + 1,
       }));
@@ -129,7 +148,7 @@ class HostGame extends Component {
                   ))}
                 </ul>
               </div>
-              <Timer duration={5} onFinish={this.handleTimerFinish} />
+              <Timer duration={45} onFinish={this.handleTimerFinish} />
             </div>
           ) : (
             <div>Round starting in a few seconds...</div>
