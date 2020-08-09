@@ -28,17 +28,23 @@ export default class Timer extends Component {
 
     if (remainingDuration <= 0) {
       this.setState({ isFinished: true, remainingDuration: 0 });
-      clearInterval(intervalRef);
+      if (intervalRef) clearInterval(intervalRef);
       this.props.onFinish();
     } else {
       this.setState({ remainingDuration });
     }
   }
 
+  componentWillUnmount() {
+    const { intervalRef } = this.state;
+
+    if (intervalRef) clearInterval(intervalRef);
+  }
+
   render() {
     const { remainingDuration } = this.state;
     const durationSecs = Math.ceil(remainingDuration/1000);
 
-    return <div>Remaining time: {durationSecs}</div>
+  return <div>{this.props.message ? this.props.message(durationSecs) : <span>Remaining time: {durationSecs}</span>}</div>
   }
 }

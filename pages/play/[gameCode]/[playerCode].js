@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "next/router";
 import PlayerManager from "../../../lib/PlayerManager";
+import Link from "next/link";
 
 class PlayGame extends Component {
   state = {
@@ -111,6 +112,7 @@ class PlayGame extends Component {
 
     const header = (
       <>
+      <div><Link href="/play"><a href="/host">Back to Play page</a></Link></div>
         <div>Playing game</div>
         <div>Game code: {gameCode}</div>
         <div>
@@ -169,7 +171,9 @@ class PlayGame extends Component {
 
     const markButtons = (playerName) =>
       (() => {
-        if (!answerMarks.hasOwnProperty(playerName)) {
+        if (playerName === this.state.playerName) {
+          return null;
+        } else if (!answerMarks.hasOwnProperty(playerName)) {
           return (
             <>
               <button
@@ -195,6 +199,8 @@ class PlayGame extends Component {
         }
       })();
 
+    const isMarkingComplete = false; // TODO:
+
     return (
       <div>
         <div>Reviewing...</div>
@@ -205,7 +211,7 @@ class PlayGame extends Component {
           <div>
             {qAndA[reviewQuestionIndex].answers.map((answer) => (
               <div key={answer.playerName}>
-                {answer.playerName}: {answer.answer}{" "}
+                {(isMarkingComplete || answer.playerName === playerName) ? answer.playerName : '?????'}: {answer.answer}{" "}
                 {markButtons(answer.playerName)}
               </div>
             ))}
