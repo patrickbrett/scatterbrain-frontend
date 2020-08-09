@@ -48,6 +48,9 @@ class PlayGame extends Component {
       this.setState({ categoryList, letter, listAnswers, roundStarted: true });
     } else if (event === "submissions-ready") {
       this.setState({ roundStarted: false, reviewStarted: true });
+    } else if (event === "times-up") {
+      console.log("Player: received 'time is up' message")
+      this.sendAnswers();
     }
   };
 
@@ -62,6 +65,7 @@ class PlayGame extends Component {
     const { listAnswers } = this.state;
     const playerManager = PlayerManager.getInstance();
     playerManager.sendAnswers(listAnswers);
+    this.setState({ roundStarted: false, reviewStarted: true });
   };
 
   render() {

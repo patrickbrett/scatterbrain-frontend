@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "next/router";
 import HostManager from "../../../lib/HostManager";
+import Timer from "../../../components/Timer";
 
 class HostGame extends Component {
   state = {
@@ -77,6 +78,12 @@ class HostGame extends Component {
     this.setState({ reviewStarted: false, roundStarted: true, categoryList, letter });
   };
 
+  handleTimerFinish = () => {
+    console.log("Host: timer finished, time is up")
+    const hostManager = HostManager.getInstance();
+    hostManager.roundTimesUp();
+  }
+
   render() {
     const { gameCode } = this.props.router.query;
     const {
@@ -122,6 +129,7 @@ class HostGame extends Component {
                   ))}
                 </ul>
               </div>
+              <Timer duration={5} onFinish={this.handleTimerFinish} />
             </div>
           ) : (
             <div>Round starting in a few seconds...</div>
@@ -142,8 +150,6 @@ class HostGame extends Component {
         answers,
       };
     });
-
-    console.log(qAndA);
 
     return (
       <div>
