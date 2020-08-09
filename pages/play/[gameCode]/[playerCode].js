@@ -203,6 +203,7 @@ class PlayGame extends Component {
 
     return (
       <div>
+        <div>{header}</div>
         <div>Reviewing...</div>
         <div>{JSON.stringify(qAndA)}</div>
         <div>

@@ -14,7 +14,8 @@ class HostGame extends Component {
     playersWhoHaveSubmitted: new Set(),
     activeRoundReview: null,
     reviewQuestionIndex: 0,
-    isMarkingComplete: false
+    isMarkingComplete: false,
+    answerScores: {}, // e.g. { "Tiff": true, "Kareem": false } when Tiff gets a point and Kareem is striked out
   };
 
   componentDidMount() {
@@ -88,12 +89,54 @@ class HostGame extends Component {
     const markingIsComplete = submissions.every(sub => {
       const currentQMarks = (sub.marks && sub.marks[reviewQuestionIndex] && Object.values(sub.marks[reviewQuestionIndex]));
       if (!currentQMarks) return false;
-      console.log('ababababa', sub, currentQMarks.length, players.length)
       return (currentQMarks.length >= players.length-1) // mark given by every player except the person who gave the answer
     })
-    console.log('mic', markingIsComplete);
+
+    if (!this.state.isMarkingComplete && markingIsComplete) { // marking just became complete
+      this.scoreAnswers();
+    }
 
     return markingIsComplete;
+  }
+
+  scoreAnswers = () => {
+    const { activeRoundReview, players, reviewQuestionIndex } = this.state;
+
+    const scoreAnswers = {};
+
+    const playersUpdated = players.map(player => {
+      const submission = Object.values(activeRoundReview.submissions).find(sub => sub.playerName === player.playerName);
+      const marks = Object.values(submission.marks[reviewQuestionIndex]);
+      const acceptedMarks = marks.filter(Boolean);
+      const playerDidScore = (acceptedMarks.length > marks.length / 2);
+
+      scoreAnswers[player.playerName] = playerDidScore;
+
+      if (playerDidScore) {
+        player.score += 100;
+      }
+
+      return player;
+    })
+
+    this.setState({ players: playersUpdated, scoreAnswers });
+  }
+
+  roundReviewToQNA = (roundReview) => {
+    const qAndA = roundReview.categoryList.categories.map((cat, i) => {
+      const answersByPlayer = Object.values(roundReview.submissions);
+      const answers = answersByPlayer.map((playerAnswer) => ({
+        playerName: playerAnswer.playerName,
+        answer: playerAnswer.answers[i],
+      }));
+
+      return {
+        question: cat,
+        answers
+      };
+    });
+
+    return qAndA;
   }
 
   reviewNext = () => {
@@ -113,8 +156,9 @@ class HostGame extends Component {
 
   startRound = async () => {
     console.log("starting round!");
+    const { players } = this.state;
     const hostManager = HostManager.getInstance();
-    const { categoryList, letter } = await hostManager.requestRoundStart();
+    const { categoryList, letter } = await hostManager.requestRoundStart(players);
     this.setState({ reviewStarted: false, roundStarted: true, categoryList, letter });
   };
 
@@ -135,7 +179,8 @@ class HostGame extends Component {
       playersWhoHaveSubmitted,
       activeRoundReview,
       reviewQuestionIndex,
-      isMarkingComplete
+      isMarkingComplete,
+      scoreAnswers
     } = this.state;
 
     const header = (
@@ -180,30 +225,21 @@ class HostGame extends Component {
       );
     }
 
-    const qAndA = activeRoundReview.categoryList.categories.map((cat, i) => {
-      const answersByPlayer = Object.values(activeRoundReview.submissions);
-      const answers = answersByPlayer.map((playerAnswer) => ({
-        playerName: playerAnswer.playerName,
-        answer: playerAnswer.answers[i],
-      }));
-
-      return {
-        question: cat,
-        answers,
-      };
-    });
+    const qAndA = this.roundReviewToQNA(activeRoundReview);
 
     return (
       <div>
         {header}
         <div>{JSON.stringify(activeRoundReview)}</div>
+        <div>{JSON.stringify(players)}</div>
+        <div>{JSON.stringify(scoreAnswers)}</div>
         <div>
           <h3>Question {reviewQuestionIndex + 1}</h3>
           <div>{qAndA[reviewQuestionIndex].question}</div>
           <div>
             {qAndA[reviewQuestionIndex].answers.map((answer) => (
               <div>
-                {isMarkingComplete ? answer.playerName : '?????'}: {answer.answer}
+                {isMarkingComplete ? answer.playerName : '?????'}: {answer.answer} {isMarkingComplete ? (scoreAnswers[answer.playerName] ? <span>👍🏻 +100</span> : <span>👺</span>) : null}
               </div>
             ))}
           </div>
