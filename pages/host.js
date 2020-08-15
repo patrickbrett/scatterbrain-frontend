@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import HostManager from "../lib/HostManager";
 import Router from "next/router";
+import Link from "next/link";
 
 export default class Host extends Component {
   state = {
@@ -30,15 +31,23 @@ export default class Host extends Component {
     const { gameCode, hostCode } = this.state;
 
     if (event === "game-started") {
-      Router.push(`/host/[gameCode]/[hostCode]`, `/host/${gameCode}/${hostCode}`)
+      Router.push(
+        `/host/[gameCode]/[hostCode]`,
+        `/host/${gameCode}/${hostCode}`
+      );
     }
-  }
+  };
 
   render() {
     const { gameCode, hostCode, players } = this.state;
 
     return (
       <div>
+        <div>
+          <Link href="/">
+            <a href="/">Back to home</a>
+          </Link>
+        </div>
         <div>Hosting game...</div>
         <div>Game code: {gameCode}</div>
         <div>Players joined:</div>

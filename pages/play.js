@@ -21,10 +21,10 @@ const randomNames = [
   "Stuey",
   "Jed",
   "Sam",
-  "Elise"
-]
+  "Elise",
+];
 
-const randomName = randomNames[Math.floor(Math.random() * (randomNames.length))];
+const randomName = randomNames[Math.floor(Math.random() * randomNames.length)];
 
 export default class Player extends Component {
   state = {
@@ -67,7 +67,10 @@ export default class Player extends Component {
     if (event === "game-started") {
       const { gameCode, playerCode } = this.state;
 
-      Router.push(`/play/[gameCode]/[playerCode]`, `/play/${gameCode}/${playerCode}`)
+      Router.push(
+        `/play/[gameCode]/[playerCode]`,
+        `/play/${gameCode}/${playerCode}`
+      );
       return;
     }
   };
@@ -75,7 +78,7 @@ export default class Player extends Component {
   startGame = () => {
     const playerManager = PlayerManager.getInstance();
     playerManager.startGame();
-  }
+  };
 
   render() {
     const { gameCode, playerName, playerCode, isVip } = this.state;
@@ -83,6 +86,11 @@ export default class Player extends Component {
     if (!playerCode) {
       return (
         <div>
+          <div>
+            <Link href="/">
+              <a href="/">Back to home</a>
+            </Link>
+          </div>
           <div>
             Enter player name:{" "}
             <input
@@ -113,7 +121,15 @@ export default class Player extends Component {
         <div>
           Your name: {playerName} {isVip ? "(VIP)" : null}
         </div>
-        <div>{isVip ? <button onClick={this.startGame}>Everybody's in, let's start!</button> : 'Please wait for the VIP to start the game.'}</div>
+        <div>
+          {isVip ? (
+            <button onClick={this.startGame}>
+              Everybody's in, let's start!
+            </button>
+          ) : (
+            "Please wait for the VIP to start the game."
+          )}
+        </div>
       </div>
     );
   }
