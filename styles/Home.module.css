@@ -64,3 +64,10 @@
   display: flex;
   justify-content: center;
 }
+
+.host-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}

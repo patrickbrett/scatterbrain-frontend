@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 import PlayerManager from "../lib/PlayerManager";
 import Router from "next/router";
+import styles from "../styles/Home.module.css";
+import clsx from "clsx";
+import { CustomButton } from "../components/Material/CustomButton";
+import { styled } from "@material-ui/core/styles";
+import ArrowRight from "@material-ui/icons/ArrowRight";
+
+const JoinButton = styled(CustomButton)({
+  margin: "0 auto",
+});
 
 const randomNames = [
   "Patrick",
@@ -85,32 +94,53 @@ export default class Player extends Component {
 
     if (!playerCode) {
       return (
-        <div>
           <div>
-            <Link href="/">
-              <a href="/">Back to home</a>
-            </Link>
-          </div>
-          <div>
-            Enter player name:{" "}
-            <input
-              type="text"
-              value={playerName}
-              onChange={this.updatePlayerName}
-            ></input>
-          </div>
-          <div>
-            Enter game code:{" "}
-            <input
-              type="text"
-              value={gameCode}
-              onChange={this.updateGameCode}
-            ></input>
-          </div>
-          <div>
-            <button onClick={this.joinGame}>Join</button>
-          </div>
-        </div>
+              <div className={styles["field-row"]}>
+                <div
+                  className={clsx(
+                    styles["field-cell"],
+                    styles["align-right"],
+                    styles["text-field-label"]
+                  )}
+                >
+                  Game code
+                </div>
+                <div className={styles["field-cell"]}>
+                  <input
+                    className={styles["text-field"]}
+                    type="text"
+                    placeholder="ABCD"
+                    value={gameCode}
+                    onChange={this.updateGameCode}
+                  />
+                </div>
+              </div>
+              <div className={styles["field-row"]}>
+                <div
+                  className={clsx(
+                    styles["field-cell"],
+                    styles["align-right"],
+                    styles["text-field-label"]
+                  )}
+                >
+                  Player name
+                </div>
+                <div className={styles["field-cell"]}>
+                  <input
+                    className={styles["text-field"]}
+                    type="text"
+                    placeholder="Julia"
+                    value={playerName}
+                    onChange={this.updatePlayerName}
+                  />
+                </div>
+              </div>
+              <div className={styles["join-button-container"]}>
+                <JoinButton onClick={this.joinGame}>
+                  Join Game <ArrowRight />
+                </JoinButton>
+              </div>
+            </div>
       );
     }
 

@@ -1,34 +1,27 @@
-import Link from "next/link";
-import styles from "../styles/Home.module.css";
-import { Button, CssBaseline } from "@material-ui/core";
-import Head from "next/head";
-import clsx from "clsx";
-import { styled } from "@material-ui/core/styles";
 import ArrowLeft from "@material-ui/icons/ArrowLeft";
 import ArrowRight from "@material-ui/icons/ArrowRight";
+import React, { Component } from "react";
+import HostBox from "../components/HostBox";
+import JoinBox from "../components/JoinBox";
+import { CustomButton } from "../components/Material/CustomButton";
+import Wrapper from "../components/Wrapper";
+import styles from "../styles/Home.module.css";
 
-const CustomButton = styled(Button)({
-  background: "#D93EE7",
-  color: "#FFF",
-  textTransform: "uppercase",
-  fontSize: "18px",
-  fontWeight: "bold",
-  padding: "10px 20px",
-  borderRadius: "10px",
-  margin: "20px"
-});
+export default class Home extends Component {
+  state = {
+    isHosting: false
+  }
 
-const JoinButton = styled(CustomButton)({
-  margin: "0 auto"
-})
+  render() {
+    const { isHosting } = this.state;
 
-export default function Home() {
-  return (
-    <div className={"bg-container"}>
-      <Head>
-        <title>Scatterbrain | Categories online with friends</title>
-      </Head>
-      <div className={"container-inner"}>
+    return isHosting ? (
+      <Wrapper>
+        <CustomButton onClick={() => this.setState({ isHosting: false })}>Back <ArrowLeft /></CustomButton>
+        <HostBox />
+      </Wrapper>
+    ) : (
+      <Wrapper>
         <h1 className={styles["heading-main"]}>
           Scatterbrain<span className={styles["heading-light"]}>.tv</span>
         </h1>
@@ -36,27 +29,17 @@ export default function Home() {
           Like the board game Scattegories, but online with friends!
         </div>
         <div className={styles["section-join-game"]}>
+          <JoinBox />
+        </div>
+        <div className={styles["host-button-container"]}>
+          <div>or</div>
           <div>
-            <div className={styles["field-row"]}>
-              <div className={clsx(styles["field-cell"], styles["align-right"], styles["text-field-label"])}>Game code</div>
-              <div className={styles["field-cell"]}>
-                <input className={styles["text-field"]} type="text" placeholder="ABCD" />
-              </div>
-            </div>
-            <div className={styles["field-row"]}>
-              <div className={clsx(styles["field-cell"], styles["align-right"], styles["text-field-label"])}>Player name</div>
-              <div className={styles["field-cell"]}>
-                <input className={styles["text-field"]} type="text" placeholder="Julia" />
-              </div>
-            </div>
-            <div className={styles["join-button-container"]}><JoinButton>Join Game <ArrowRight /></JoinButton></div>
+            <CustomButton onClick={() => this.setState({ isHosting: true })}>
+              Host Game <ArrowRight />
+            </CustomButton>
           </div>
         </div>
-          <div>or</div>
-          <CustomButton className={clsx(styles["btn"], styles["btn-host-game"])}>
-            Host Game <ArrowRight />
-          </CustomButton>
-      </div>
-    </div>
-  );
+      </Wrapper>
+    );
+  }
 }

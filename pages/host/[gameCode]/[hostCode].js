@@ -3,6 +3,7 @@ import { withRouter } from "next/router";
 import HostManager from "../../../lib/HostManager";
 import Timer from "../../../components/Timer";
 import Link from "next/link";
+import Wrapper from "../../../components/Wrapper";
 
 class HostGame extends Component {
   state = {
@@ -193,7 +194,7 @@ class HostGame extends Component {
 
     if (!reviewStarted) {
       return (
-        <div>
+        <Wrapper>
           {header}
           {roundStarted ? (
             <div>
@@ -221,14 +222,14 @@ class HostGame extends Component {
           ) : (
             <div>Round starting in a few seconds...</div>
           )}
-        </div>
+        </Wrapper>
       );
     }
 
     const qAndA = this.roundReviewToQNA(activeRoundReview);
 
     return (
-      <div>
+      <Wrapper>
         {header}
         <div>{JSON.stringify(activeRoundReview)}</div>
         <div>{JSON.stringify(players)}</div>
@@ -247,7 +248,7 @@ class HostGame extends Component {
         <div>
           {isMarkingComplete ? <Timer message={time => `Time until next round auto starts: ${time}`} duration={10} onFinish={this.reviewNext} /> : 'Waiting for players to review...'}
         </div>
-      </div>
+      </Wrapper>
     );
   }
 }
