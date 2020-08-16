@@ -26,7 +26,7 @@ export default class Home extends Component {
           Scatterbrain<span className={styles["heading-light"]}>.tv</span>
         </h1>
         <div className={styles["para"]}>
-          Like the board game Scattegories, but online with friends!
+          Like the board game Scattergories, but online with friends!
         </div>
         <div className={styles["section-join-game"]}>
           <JoinBox />
