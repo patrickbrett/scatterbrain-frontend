@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-import {WEBSOCKET_HOST} from './config';
+import config from "../config.json";
 
 export default class HostManager {
   static instance;
@@ -13,7 +13,7 @@ export default class HostManager {
   constructor() {
     this.players = [];
 
-    const socket = io(WEBSOCKET_HOST);
+    const socket = io(config.wsHost);
     this.socket = socket;
 
     socket.on("new-player-joined", (data) => {

@@ -4,5 +4,6 @@
   "debug": false,
   "autoFillPlayerNames": false,
   "showHome": true,
-  "autoNextRoundTime": 10
+  "autoNextRoundTime": 10,
+  "wsHost": "ws://https://api.scatterbrain.tv:443"
 }

@@ -1,1 +1,0 @@
-export const WEBSOCKET_HOST = 'ws://192.168.0.24:3000'; //'ws://localhost:3000';
