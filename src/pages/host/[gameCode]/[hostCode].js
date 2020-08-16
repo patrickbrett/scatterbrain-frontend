@@ -1,9 +1,12 @@
-import React, { Component } from "react";
 import { withRouter } from "next/router";
-import HostManager from "../../../lib/HostManager";
+import React, { Component } from "react";
 import Timer from "../../../components/Timer";
-import Link from "next/link";
 import Wrapper from "../../../components/Wrapper";
+import config from "../../../config.json";
+import HostManager from "../../../lib/HostManager";
+import styles from "../../../styles/Home.module.css";
+import { CustomButtonGrey } from "../../../components/Material/CustomButton";
+import ArrowLeft from "@material-ui/icons/ArrowLeft";
 
 class HostGame extends Component {
   state = {
@@ -46,21 +49,16 @@ class HostGame extends Component {
     const { event } = data;
 
     if (event === "reload-host-accepted") {
-
       const { players } = data;
       this.startRound();
       this.setState({ players });
-
     } else if (event === "player-has-submitted") {
-
       const { playerName } = data;
       console.log(playerName);
       const { playersWhoHaveSubmitted } = this.state;
       playersWhoHaveSubmitted.add(playerName);
       this.setState({ playersWhoHaveSubmitted });
-
     } else if (event === "submissions-ready") {
-      
       const activeRoundReview = data.activeRound;
       this.setState({
         activeRoundReview,
@@ -68,18 +66,16 @@ class HostGame extends Component {
         roundStarted: false,
         reviewQuestionIndex: 0,
       });
-
-    } else if (event === 'marked-answer') {
-
+    } else if (event === "marked-answer") {
       const { submissions } = data;
-      this.setState(prevState => {
+      this.setState((prevState) => {
         const { activeRoundReview } = prevState;
         activeRoundReview.submissions = submissions;
 
         const isMarkingComplete = this.checkIfMarkingIsComplete();
 
         return { activeRoundReview, isMarkingComplete };
-      })
+      });
     }
   };
 
@@ -87,29 +83,35 @@ class HostGame extends Component {
     const { players, activeRoundReview, reviewQuestionIndex } = this.state;
 
     const submissions = Object.values(activeRoundReview.submissions);
-    const markingIsComplete = submissions.every(sub => {
-      const currentQMarks = (sub.marks && sub.marks[reviewQuestionIndex] && Object.values(sub.marks[reviewQuestionIndex]));
+    const markingIsComplete = submissions.every((sub) => {
+      const currentQMarks =
+        sub.marks &&
+        sub.marks[reviewQuestionIndex] &&
+        Object.values(sub.marks[reviewQuestionIndex]);
       if (!currentQMarks) return false;
-      return (currentQMarks.length >= players.length-1) // mark given by every player except the person who gave the answer
-    })
+      return currentQMarks.length >= players.length - 1; // mark given by every player except the person who gave the answer
+    });
 
-    if (!this.state.isMarkingComplete && markingIsComplete) { // marking just became complete
+    if (!this.state.isMarkingComplete && markingIsComplete) {
+      // marking just became complete
       this.scoreAnswers();
     }
 
     return markingIsComplete;
-  }
+  };
 
   scoreAnswers = () => {
     const { activeRoundReview, players, reviewQuestionIndex } = this.state;
 
     const scoreAnswers = {};
 
-    const playersUpdated = players.map(player => {
-      const submission = Object.values(activeRoundReview.submissions).find(sub => sub.playerName === player.playerName);
+    const playersUpdated = players.map((player) => {
+      const submission = Object.values(activeRoundReview.submissions).find(
+        (sub) => sub.playerName === player.playerName
+      );
       const marks = Object.values(submission.marks[reviewQuestionIndex]);
       const acceptedMarks = marks.filter(Boolean);
-      const playerDidScore = (acceptedMarks.length > marks.length / 2);
+      const playerDidScore = acceptedMarks.length > marks.length / 2;
 
       scoreAnswers[player.playerName] = playerDidScore;
 
@@ -118,10 +120,10 @@ class HostGame extends Component {
       }
 
       return player;
-    })
+    });
 
     this.setState({ players: playersUpdated, scoreAnswers });
-  }
+  };
 
   roundReviewToQNA = (roundReview) => {
     const qAndA = roundReview.categoryList.categories.map((cat, i) => {
@@ -133,22 +135,25 @@ class HostGame extends Component {
 
       return {
         question: cat,
-        answers
+        answers,
       };
     });
 
     return qAndA;
-  }
+  };
 
   reviewNext = () => {
-    if (this.state.reviewQuestionIndex < this.state.categoryList.categories.length - 1) {
+    if (
+      this.state.reviewQuestionIndex <
+      this.state.categoryList.categories.length - 1
+    ) {
       const hostManager = HostManager.getInstance();
       hostManager.reviewNext(this.state.reviewQuestionIndex);
-      console.log('send review next')
+      console.log("send review next");
 
       this.setState((prevState) => ({
         reviewQuestionIndex: prevState.reviewQuestionIndex + 1,
-        isMarkingComplete: false
+        isMarkingComplete: false,
       }));
     } else {
       this.startRound();
@@ -159,14 +164,29 @@ class HostGame extends Component {
     console.log("starting round!");
     const { players } = this.state;
     const hostManager = HostManager.getInstance();
-    const { categoryList, letter } = await hostManager.requestRoundStart(players);
-    this.setState({ reviewStarted: false, roundStarted: true, categoryList, letter });
+    const { categoryList, letter } = await hostManager.requestRoundStart(
+      players
+    );
+    this.setState({
+      reviewStarted: false,
+      roundStarted: true,
+      categoryList,
+      letter,
+    });
   };
 
   handleTimerFinish = () => {
-    console.log("Host: timer finished, time is up")
+    console.log("Host: timer finished, time is up");
     const hostManager = HostManager.getInstance();
     hostManager.roundTimesUp();
+  };
+
+  returnHome = () => {
+    if (!confirm("Are you sure you want to quit the current game and return to the home page?")) {
+      return;
+    }
+
+    this.props.router.push("/");
   }
 
   render() {
@@ -181,12 +201,15 @@ class HostGame extends Component {
       activeRoundReview,
       reviewQuestionIndex,
       isMarkingComplete,
-      scoreAnswers
+      scoreAnswers,
     } = this.state;
 
     const header = (
       <>
-        <div><Link href="/host"><a href="/host">Back to Host page</a></Link></div>
+        <h1 className={styles["heading-main"]}>
+          Scatterbrain<span className={styles["heading-light"]}>.tv</span>
+        </h1>
+        <CustomButtonGrey onClick={this.returnHome}><ArrowLeft /> Home</CustomButtonGrey>
         <div>Hosting game</div>
         <div>Game code: {gameCode}</div>
       </>
@@ -217,7 +240,10 @@ class HostGame extends Component {
                   ))}
                 </ul>
               </div>
-              <Timer duration={45} onFinish={this.handleTimerFinish} />
+              <Timer
+                duration={config.timerDuration}
+                onFinish={this.handleTimerFinish}
+              />
             </div>
           ) : (
             <div>Round starting in a few seconds...</div>
@@ -240,13 +266,29 @@ class HostGame extends Component {
           <div>
             {qAndA[reviewQuestionIndex].answers.map((answer) => (
               <div>
-                {isMarkingComplete ? answer.playerName : '?????'}: {answer.answer} {isMarkingComplete ? (scoreAnswers[answer.playerName] ? <span>👍🏻 +100</span> : <span>👺</span>) : null}
+                {isMarkingComplete ? answer.playerName : "?????"}:{" "}
+                {answer.answer}{" "}
+                {isMarkingComplete ? (
+                  scoreAnswers[answer.playerName] ? (
+                    <span>👍🏻 +100</span>
+                  ) : (
+                    <span>👺</span>
+                  )
+                ) : null}
               </div>
             ))}
           </div>
         </div>
         <div>
-          {isMarkingComplete ? <Timer message={time => `Time until next round auto starts: ${time}`} duration={10} onFinish={this.reviewNext} /> : 'Waiting for players to review...'}
+          {isMarkingComplete ? (
+            <Timer
+              message={(time) => `Time until next round auto starts: ${time}`}
+              duration={10}
+              onFinish={this.reviewNext}
+            />
+          ) : (
+            "Waiting for players to review..."
+          )}
         </div>
       </Wrapper>
     );

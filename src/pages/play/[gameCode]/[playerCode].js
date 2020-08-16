@@ -1,8 +1,16 @@
-import React, { Component } from "react";
+import { IconButton, styled } from "@material-ui/core";
+import { ThumbDown, ThumbUp } from "@material-ui/icons";
 import { withRouter } from "next/router";
-import PlayerManager from "../../../lib/PlayerManager";
-import Link from "next/link";
+import React, { Component } from "react";
+import { CustomButtonGrey } from "../../../components/Material/CustomButton";
 import Wrapper from "../../../components/Wrapper";
+import PlayerManager from "../../../lib/PlayerManager";
+import ArrowLeft from "@material-ui/icons/ArrowLeft";
+import styles from "../../../styles/PlayerCode.module.css";
+
+const IconButtonActive = styled(IconButton)({
+  color: "#D93EE7",
+});
 
 class PlayGame extends Component {
   state = {
@@ -92,8 +100,20 @@ class PlayGame extends Component {
     this.setState((prevState) => {
       const { answerMarks } = prevState;
       answerMarks[playerName] = isApproved;
-      return { answerMarks }
+      return { answerMarks };
     });
+  };
+
+  returnHome = () => {
+    if (
+      !confirm(
+        "Are you sure you want to quit the current game and return to the home page?"
+      )
+    ) {
+      return;
+    }
+
+    this.props.router.push("/");
   };
 
   render() {
@@ -113,9 +133,9 @@ class PlayGame extends Component {
 
     const header = (
       <>
-      <div><Link href="/play"><a href="/host">Back to Play page</a></Link></div>
-        <div>Playing game</div>
-        <div>Game code: {gameCode}</div>
+        <CustomButtonGrey onClick={this.returnHome}>
+          <ArrowLeft /> Home
+        </CustomButtonGrey>
         <div>
           Player name: {playerName} {isVip ? "(VIP)" : null}
         </div>
@@ -177,26 +197,60 @@ class PlayGame extends Component {
         } else if (!answerMarks.hasOwnProperty(playerName)) {
           return (
             <>
-              <button
+              <IconButton
                 onClick={() =>
                   this.markAnswer(playerName, reviewQuestionIndex, true)
                 }
               >
-                ✅
-              </button>
-              <button
+                <ThumbUp />
+              </IconButton>
+              <IconButton
                 onClick={() =>
                   this.markAnswer(playerName, reviewQuestionIndex, false)
                 }
               >
-                ❌
-              </button>
+                <ThumbDown />
+              </IconButton>
             </>
           );
         } else if (answerMarks[playerName] === true) {
-          return <div>✅</div>;
+          return (
+            <>
+              <IconButtonActive
+                onClick={() =>
+                  this.markAnswer(playerName, reviewQuestionIndex, true)
+                }
+              >
+                <ThumbUp />
+              </IconButtonActive>
+              <IconButton
+                onClick={() =>
+                  this.markAnswer(playerName, reviewQuestionIndex, false)
+                }
+              >
+                <ThumbDown />
+              </IconButton>
+            </>
+          );
         } else {
-          return <div>❌</div>;
+          return (
+            <>
+              <IconButton
+                onClick={() =>
+                  this.markAnswer(playerName, reviewQuestionIndex, true)
+                }
+              >
+                <ThumbUp />
+              </IconButton>
+              <IconButtonActive
+                onClick={() =>
+                  this.markAnswer(playerName, reviewQuestionIndex, false)
+                }
+              >
+                <ThumbDown />
+              </IconButtonActive>
+            </>
+          );
         }
       })();
 
@@ -210,11 +264,25 @@ class PlayGame extends Component {
         <div>
           <h3>Question {reviewQuestionIndex + 1}</h3>
           <div>{qAndA[reviewQuestionIndex].question}</div>
-          <div>
+          <div className={styles["answers-table"]}>
             {qAndA[reviewQuestionIndex].answers.map((answer) => (
-              <div key={answer.playerName}>
-                {(isMarkingComplete || answer.playerName === playerName) ? answer.playerName : '?????'}: {answer.answer}{" "}
-                {markButtons(answer.playerName)}
+              <div
+                key={answer.playerName}
+                className={styles["answer-table-row"]}
+              >
+                <div className={styles["answer-table-cell"]}>
+                  {isMarkingComplete || answer.playerName === playerName
+                    ? answer.playerName
+                    : "?????"}
+                </div>
+                <div className={styles["answer-table-cell"]}>
+                  {answer.answer ? (
+                    answer.answer
+                  ) : (
+                    <div className={styles["no-answer-box"]}>No answer!</div>
+                  )}{" "}
+                  {markButtons(answer.playerName)}
+                </div>
               </div>
             ))}
           </div>

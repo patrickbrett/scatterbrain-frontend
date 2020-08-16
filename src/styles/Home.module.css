@@ -57,6 +57,7 @@
   border-radius: 10px;
   border: 2px solid #333;
   font-size: 18px;
+  max-width: 100%;
 }
 
 .join-button-container {

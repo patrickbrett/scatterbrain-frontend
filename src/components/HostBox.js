@@ -65,11 +65,11 @@ export default class Host extends Component {
         <CustomDivider />
         <h2>Players</h2>
         <ul>
-          {players.map((player) => (
+          {players.length ? players.map((player) => (
             <li key={player.playerName}>
               {player.playerName} {player.isVip ? "(VIP)" : null}
             </li>
-          ))}
+          )) : <span>Nobody's here yet 😢</span>}
         </ul>
       </div>
     );
