@@ -19,3 +19,24 @@
 .answer-table-cell {
   margin: 0 20px;
 }
+
+.word-list-item {
+  margin: 20px;
+}
+
+.word-list-cat {
+  display: inline-block;
+  width: 50%;
+}
+
+.word-list-input-container {
+  display: inline-block;
+  width: 50%;
+}
+
+.word-list-input {
+  padding: 10px;
+  width: 100%;
+  font-size: 24px;
+  font-weight: 700;
+}

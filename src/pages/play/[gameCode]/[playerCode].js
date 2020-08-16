@@ -2,10 +2,10 @@ import { IconButton, styled } from "@material-ui/core";
 import { ThumbDown, ThumbUp } from "@material-ui/icons";
 import { withRouter } from "next/router";
 import React, { Component } from "react";
-import { CustomButtonGrey } from "../../../components/Material/CustomButton";
+import { CustomButtonGrey, CustomButton } from "../../../components/Material/CustomButton";
 import Wrapper from "../../../components/Wrapper";
 import PlayerManager from "../../../lib/PlayerManager";
-import ArrowLeft from "@material-ui/icons/ArrowLeft";
+import Cross from "@material-ui/icons/Close";
 import styles from "../../../styles/PlayerCode.module.css";
 import config from "../../../config.json";
 
@@ -135,11 +135,8 @@ class PlayGame extends Component {
     const header = (
       <>
         <CustomButtonGrey onClick={this.returnHome}>
-          <ArrowLeft /> Home
+          <Cross /> Quit
         </CustomButtonGrey>
-        <div>
-          Player name: {playerName} {isVip ? "(VIP)" : null}
-        </div>
       </>
     );
 
@@ -150,21 +147,22 @@ class PlayGame extends Component {
           {roundStarted ? (
             <div>
               <h3>{categoryList.name}</h3>
-              <p>Letter: {letter}</p>
+              <div className={"letter-box"}>{letter}</div>
               <ol>
                 {categoryList.categories.map((cat, i) => (
-                  <li key={cat}>
-                    {cat}{" "}
-                    <input
+                  <li key={cat} className={styles["word-list-item"]}>
+                    <div className={styles["word-list-cat"]}>{cat}</div>
+                    <div className={styles["word-list-input-container"]}><input
+                    className={styles["word-list-input"]}
                       type="text"
                       value={listAnswers[i]}
                       onChange={(e) => this.updateListAnswer(e, i)}
-                    />
+                    /></div>
                   </li>
                 ))}
               </ol>
               <div>
-                <button onClick={this.sendAnswers}>I'm done</button>
+                <CustomButton onClick={this.sendAnswers}>I'm done</CustomButton>
               </div>
             </div>
           ) : (

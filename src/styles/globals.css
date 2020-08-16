@@ -28,6 +28,7 @@ div {
 
 .container-inner {
   background: #fff;
+  position: relative;
   box-shadow: 0 16px 20px 2px rgba(0, 0, 0, 0.25);
   /* overflow: auto; */
   margin: 40px auto;
@@ -51,4 +52,39 @@ div {
 h2 {
   text-transform: uppercase;
   font-size: 24px;
+}
+
+.game-code-box, .game-code-box-abs {
+  border: 2px solid #333;
+  width: auto;
+  padding: 8px;
+  font-size: 28px;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+.game-code-box-abs {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+}
+
+.letter-box {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  font-size: 36px;
+  margin: 10px 0;
+  font-weight: bold;
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  background: linear-gradient(135deg, #be3566, #be3566);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  color: #fff;
+  transform: rotate3d(0, 1, 0.5, 10deg);
 }

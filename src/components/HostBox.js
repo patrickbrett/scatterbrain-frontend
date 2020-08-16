@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { CustomDivider } from "../components/Material/CustomDivider";
 import HostManager from "../lib/HostManager";
 import styles from "../styles/Home.module.css";
-import { CrownIcon } from "./CrownIcon";
+import { StarIcon } from "./StarIcon";
 
 export default class Host extends Component {
   state = {
@@ -59,14 +59,14 @@ export default class Host extends Component {
             Game code
           </div>
           <div className={styles["field-cell"]}>
-            <div className={styles["game-code-box"]}>{gameCode}</div>
+            <div className={"game-code-box"}>{gameCode}</div>
           </div>
         </div>
         <CustomDivider />
         <div className={styles["player-names"]}>
           {players.length ? players.map((player) => (
             <div className={styles["player-name-container"]} key={player.playerName}>
-              <div>{player.playerName}</div> {player.isVip ? <div><CrownIcon /></div> : null}
+              <div>{player.playerName}</div> {player.isVip ? <div><StarIcon /></div> : null}
             </div>
           )) : <span>Nobody's here yet 😢</span>}
         </div>

@@ -73,15 +73,6 @@
   flex-direction: row;
 }
 
-.game-code-box {
-  border: 2px solid #333;
-  width: auto;
-  padding: 8px;
-  font-size: 28px;
-  display: inline-block;
-  margin: 10px 0;
-}
-
 .player-names {
   display: flex;
   justify-content: center;
@@ -109,6 +100,16 @@
 
 .player-name-container div {
   margin: 4px;
+}
+
+.player-name-container-subm {
+  opacity: 1;
+  transition: 0.5s background, 0.5s color;
+}
+
+.player-name-container-not-subm {
+  background: none;
+  color: #999;
 }
 
 @media screen and (max-width: 600px) {

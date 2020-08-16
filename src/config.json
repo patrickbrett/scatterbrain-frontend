@@ -1,6 +1,8 @@
 {
-  "timerDuration": 30,
+  "timerDuration": 3000,
   "confirmExit": false,
   "debug": false,
-  "autoFillPlayerNames": false
+  "autoFillPlayerNames": false,
+  "showHome": true,
+  "autoNextRoundTime": 10
 }

@@ -1,12 +1,14 @@
 import React, { Component } from "react";
+import TimerIcon from "@material-ui/icons/Timer";
+import styles from "../styles/Timer.module.css";
 
 export default class Timer extends Component {
   state = {
     startTime: null,
     remainingDuration: null,
     isFinished: false,
-    isStarted: false
-  }
+    isStarted: false,
+  };
 
   componentDidMount() {
     const { duration } = this.props;
@@ -15,7 +17,12 @@ export default class Timer extends Component {
 
     const intervalRef = setInterval(this.timerInterval, 500);
 
-    this.setState({ startTime, remainingDuration: duration*1000, intervalRef, isStarted: true });
+    this.setState({
+      startTime,
+      remainingDuration: duration * 1000,
+      intervalRef,
+      isStarted: true,
+    });
   }
 
   timerInterval = () => {
@@ -24,7 +31,7 @@ export default class Timer extends Component {
     const now = new Date().getTime();
     const { startTime, intervalRef } = this.state;
     const elapsedDuration = now - startTime;
-    const remainingDuration = this.props.duration*1000 - elapsedDuration;
+    const remainingDuration = this.props.duration * 1000 - elapsedDuration;
 
     if (remainingDuration <= 0) {
       this.setState({ isFinished: true, remainingDuration: 0 });
@@ -33,7 +40,7 @@ export default class Timer extends Component {
     } else {
       this.setState({ remainingDuration });
     }
-  }
+  };
 
   componentWillUnmount() {
     const { intervalRef } = this.state;
@@ -43,8 +50,18 @@ export default class Timer extends Component {
 
   render() {
     const { remainingDuration } = this.state;
-    const durationSecs = Math.ceil(remainingDuration/1000);
+    const durationSecs = Math.ceil(remainingDuration / 1000);
 
-  return <div>{this.props.message ? this.props.message(durationSecs) : <span>Remaining time: {durationSecs}</span>}</div>
+    return (
+      <div>
+        {this.props.message ? (
+          this.props.message(durationSecs)
+        ) : (
+          <div className={styles["timer-inner"]}>
+            <TimerIcon /> {durationSecs}
+          </div>
+        )}
+      </div>
+    );
   }
 }

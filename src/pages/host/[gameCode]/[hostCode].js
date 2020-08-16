@@ -5,8 +5,10 @@ import Wrapper from "../../../components/Wrapper";
 import HostManager from "../../../lib/HostManager";
 import styles from "../../../styles/Home.module.css";
 import { CustomButtonGrey } from "../../../components/Material/CustomButton";
-import ArrowLeft from "@material-ui/icons/ArrowLeft";
+import Cross from "@material-ui/icons/Close";
 import config from "../../../config.json";
+import { StarIcon } from "../../../components/StarIcon";
+import clsx from "clsx";
 
 class HostGame extends Component {
   state = {
@@ -215,9 +217,9 @@ class HostGame extends Component {
           Scatterbrain<span className={styles["heading-light"]}>.tv</span>
         </h1>
         <CustomButtonGrey onClick={this.returnHome}>
-          <ArrowLeft /> Home
+          <Cross /> Quit
         </CustomButtonGrey>
-        <div>Game code: {gameCode}</div>
+            <div className={"game-code-box-abs"}>{gameCode}</div>
       </>
     );
 
@@ -228,23 +230,33 @@ class HostGame extends Component {
           {roundStarted ? (
             <div>
               <h3>{categoryList.name}</h3>
-              <p>Letter: {letter}</p>
+              <div className="letter-box">{letter}</div>
               <ol>
                 {categoryList.categories.map((cat) => (
                   <li key={cat}>{cat}</li>
                 ))}
               </ol>
               <div>
-                <ul>
+                <div className={styles["player-names"]}>
                   {players.map((player) => (
-                    <li>
-                      {player.playerName} {player.isVip ? "(VIP)" : null}{" "}
-                      {playersWhoHaveSubmitted.has(player.playerName)
-                        ? "(SUBMITTED)"
-                        : null}
-                    </li>
+                    <div
+                      className={clsx(
+                        styles["player-name-container"],
+                        playersWhoHaveSubmitted.has(player.playerName)
+                          ? styles["player-name-container-subm"]
+                          : styles["player-name-container-not-subm"]
+                      )}
+                      key={player.playerName}
+                    >
+                      <div>{player.playerName}</div>{" "}
+                      {player.isVip ? (
+                        <div>
+                          <StarIcon />
+                        </div>
+                      ) : null}
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
               <Timer
                 duration={config.timerDuration}
