@@ -13,7 +13,7 @@ export default class HostManager {
   constructor() {
     this.players = [];
 
-    const socket = io(config.wsHost, { transport : ['websocket'] });
+    const socket = io(config.wsHost, { transport : ['websocket'], secure: true });
     this.socket = socket;
 
     socket.on("new-player-joined", (data) => {
