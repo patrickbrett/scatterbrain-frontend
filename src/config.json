@@ -1,9 +1,9 @@
 {
-  "timerDuration": 3000,
-  "confirmExit": false,
+  "timerDuration": 90,
+  "confirmExit": true,
   "debug": false,
   "autoFillPlayerNames": false,
   "showHome": true,
   "autoNextRoundTime": 10,
-  "wsHost": "ws://api.scatterbrain.tv:443"
+  "wsHost": "ws://api.scatterbrain.tv:80"
 }

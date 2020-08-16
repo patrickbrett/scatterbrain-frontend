@@ -11,7 +11,7 @@ export default class HostManager {
   listener;
 
   constructor() {
-    const socket = io(config.wsHost);
+    const socket = io(config.wsHost, { transport : ['websocket'] });
     this.socket = socket;
 
     socket.on('join-game-accepted', data => {
