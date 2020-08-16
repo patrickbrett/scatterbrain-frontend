@@ -17,7 +17,7 @@ export default class Home extends Component {
 
     return isHosting ? (
       <Wrapper>
-        <CustomButtonGrey onClick={() => this.setState({ isHosting: false })}>Back <ArrowLeft /></CustomButtonGrey>
+        <CustomButtonGrey onClick={() => this.setState({ isHosting: false })}><ArrowLeft /> Back</CustomButtonGrey>
         <HostBox />
       </Wrapper>
     ) : (

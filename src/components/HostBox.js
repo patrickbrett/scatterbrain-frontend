@@ -1,10 +1,10 @@
+import clsx from "clsx";
+import Router from "next/router";
 import React, { Component } from "react";
+import { CustomDivider } from "../components/Material/CustomDivider";
 import HostManager from "../lib/HostManager";
 import styles from "../styles/Home.module.css";
-import Router from "next/router";
-import Link from "next/link";
-import clsx from "clsx";
-import { CustomDivider } from "../components/Material/CustomDivider";
+import { CrownIcon } from "./CrownIcon";
 
 export default class Host extends Component {
   state = {
@@ -63,14 +63,13 @@ export default class Host extends Component {
           </div>
         </div>
         <CustomDivider />
-        <h2>Players</h2>
-        <ul>
+        <div className={styles["player-names"]}>
           {players.length ? players.map((player) => (
-            <li key={player.playerName}>
-              {player.playerName} {player.isVip ? "(VIP)" : null}
-            </li>
+            <div className={styles["player-name-container"]} key={player.playerName}>
+              <div>{player.playerName}</div> {player.isVip ? <div><CrownIcon /></div> : null}
+            </div>
           )) : <span>Nobody's here yet 😢</span>}
-        </ul>
+        </div>
       </div>
     );
   }

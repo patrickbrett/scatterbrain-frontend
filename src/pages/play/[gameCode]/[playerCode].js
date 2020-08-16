@@ -260,7 +260,6 @@ class PlayGame extends Component {
     return (
       <Wrapper>
         <div>{header}</div>
-        <div>Reviewing...</div>
         {config.debug ? (<div>{JSON.stringify(qAndA)}</div>) : null}
         <div>
           <h3>Question {reviewQuestionIndex + 1}</h3>

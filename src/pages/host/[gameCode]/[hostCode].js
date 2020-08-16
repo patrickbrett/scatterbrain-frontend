@@ -217,7 +217,6 @@ class HostGame extends Component {
         <CustomButtonGrey onClick={this.returnHome}>
           <ArrowLeft /> Home
         </CustomButtonGrey>
-        <div>Hosting game</div>
         <div>Game code: {gameCode}</div>
       </>
     );

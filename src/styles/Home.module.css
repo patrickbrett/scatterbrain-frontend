@@ -38,8 +38,8 @@
 }
 
 .field-cell {
-  width: calc(50% - 40px);
-  padding: 10px 20px;
+  width: calc(50% - 20px);
+  padding: 10px 10px;
 }
 
 .align-right {
@@ -80,4 +80,47 @@
   font-size: 28px;
   display: inline-block;
   margin: 10px 0;
+}
+
+.player-names {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.player-name-container {
+  margin: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: 2px solid #eee;
+  background: linear-gradient(135deg, #be3566, #1a32ad);
+  border-radius: 10px;
+  color: #fff;
+  height: 70px;
+  padding: 10px 20px;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5) inset;
+}
+
+.player-name-container div {
+  margin: 4px;
+}
+
+@media screen and (max-width: 600px) {
+  .heading-main {
+    font-size: 28px;
+  }
+
+  .para {
+    font-size: 18px;
+  }
+
+  .text-field-label {
+    font-size: 18px;
+  }
 }
