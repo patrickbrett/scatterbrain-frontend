@@ -17,3 +17,10 @@ export const CustomButton = styled(Button)({
     boxShadow: "0 4px 16px 4px rgba(0, 0, 0, 0.25)",
   },
 });
+
+export const CustomButtonGrey = styled(CustomButton)({
+  background: "#999",
+  "&:hover": {
+    background: "#ccc"
+  }
+})

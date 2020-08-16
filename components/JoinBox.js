@@ -153,9 +153,9 @@ export default class Player extends Component {
         </div>
         <div>
           {isVip ? (
-            <button onClick={this.startGame}>
+            <CustomButton onClick={this.startGame}>
               Everybody's in, let's start!
-            </button>
+            </CustomButton>
           ) : (
             "Please wait for the VIP to start the game."
           )}

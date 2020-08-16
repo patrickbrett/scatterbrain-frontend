@@ -3,7 +3,7 @@ import ArrowRight from "@material-ui/icons/ArrowRight";
 import React, { Component } from "react";
 import HostBox from "../components/HostBox";
 import JoinBox from "../components/JoinBox";
-import { CustomButton } from "../components/Material/CustomButton";
+import { CustomButton, CustomButtonGrey } from "../components/Material/CustomButton";
 import Wrapper from "../components/Wrapper";
 import styles from "../styles/Home.module.css";
 
@@ -17,7 +17,7 @@ export default class Home extends Component {
 
     return isHosting ? (
       <Wrapper>
-        <CustomButton onClick={() => this.setState({ isHosting: false })}>Back <ArrowLeft /></CustomButton>
+        <CustomButtonGrey onClick={() => this.setState({ isHosting: false })}>Back <ArrowLeft /></CustomButtonGrey>
         <HostBox />
       </Wrapper>
     ) : (

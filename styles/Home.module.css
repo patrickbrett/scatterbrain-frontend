@@ -71,3 +71,12 @@
   justify-content: center;
   flex-direction: row;
 }
+
+.game-code-box {
+  border: 2px solid #333;
+  width: auto;
+  padding: 8px;
+  font-size: 28px;
+  display: inline-block;
+  margin: 10px 0;
+}

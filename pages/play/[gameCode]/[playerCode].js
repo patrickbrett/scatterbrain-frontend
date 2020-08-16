@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "next/router";
 import PlayerManager from "../../../lib/PlayerManager";
 import Link from "next/link";
+import Wrapper from "../../../components/Wrapper";
 
 class PlayGame extends Component {
   state = {
@@ -123,7 +124,7 @@ class PlayGame extends Component {
 
     if (!reviewStarted) {
       return (
-        <div>
+        <Wrapper>
           {header}
           {roundStarted ? (
             <div>
@@ -148,7 +149,7 @@ class PlayGame extends Component {
           ) : (
             <div>Waiting for round to start...</div>
           )}
-        </div>
+        </Wrapper>
       );
     }
 
@@ -202,7 +203,7 @@ class PlayGame extends Component {
     const isMarkingComplete = false; // TODO:
 
     return (
-      <div>
+      <Wrapper>
         <div>{header}</div>
         <div>Reviewing...</div>
         <div>{JSON.stringify(qAndA)}</div>
@@ -218,7 +219,7 @@ class PlayGame extends Component {
             ))}
           </div>
         </div>
-      </div>
+      </Wrapper>
     );
   }
 }

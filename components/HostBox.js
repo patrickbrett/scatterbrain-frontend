@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import HostManager from "../lib/HostManager";
+import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import Link from "next/link";
+import clsx from "clsx";
+import { CustomDivider } from "../components/Material/CustomDivider";
 
 export default class Host extends Component {
   state = {
@@ -43,14 +46,24 @@ export default class Host extends Component {
 
     return (
       <div>
-        <div>
-          <Link href="/">
-            <a href="/">Back to home</a>
-          </Link>
+        <div>Players can join your game using the code below!</div>
+        <CustomDivider />
+        <div className={styles["field-row"]}>
+          <div
+            className={clsx(
+              styles["field-cell"],
+              styles["align-right"],
+              styles["text-field-label"]
+            )}
+          >
+            Game code
+          </div>
+          <div className={styles["field-cell"]}>
+            <div className={styles["game-code-box"]}>{gameCode}</div>
+          </div>
         </div>
-        <div>Hosting game...</div>
-        <div>Game code: {gameCode}</div>
-        <div>Players joined:</div>
+        <CustomDivider />
+        <h2>Players</h2>
         <ul>
           {players.map((player) => (
             <li key={player.playerName}>

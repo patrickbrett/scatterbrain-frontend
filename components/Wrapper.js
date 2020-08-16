@@ -9,9 +9,7 @@ export default class Wrapper extends Component {
         <Head>
           <title>Scatterbrain | Categories online with friends</title>
         </Head>
-        <div className={"container-inner"}>
-        {this.props.children}
-        </div>
+        <div className={"container-inner"}>{this.props.children}</div>
       </div>
     );
   }
