@@ -7,6 +7,7 @@ import Wrapper from "../../../components/Wrapper";
 import PlayerManager from "../../../lib/PlayerManager";
 import ArrowLeft from "@material-ui/icons/ArrowLeft";
 import styles from "../../../styles/PlayerCode.module.css";
+import config from "../../../config.json";
 
 const IconButtonActive = styled(IconButton)({
   color: "#D93EE7",
@@ -106,7 +107,7 @@ class PlayGame extends Component {
 
   returnHome = () => {
     if (
-      !confirm(
+      config.confirmExit && !confirm(
         "Are you sure you want to quit the current game and return to the home page?"
       )
     ) {
@@ -260,7 +261,7 @@ class PlayGame extends Component {
       <Wrapper>
         <div>{header}</div>
         <div>Reviewing...</div>
-        <div>{JSON.stringify(qAndA)}</div>
+        {config.debug ? (<div>{JSON.stringify(qAndA)}</div>) : null}
         <div>
           <h3>Question {reviewQuestionIndex + 1}</h3>
           <div>{qAndA[reviewQuestionIndex].question}</div>

@@ -2,11 +2,11 @@ import { withRouter } from "next/router";
 import React, { Component } from "react";
 import Timer from "../../../components/Timer";
 import Wrapper from "../../../components/Wrapper";
-import config from "../../../config.json";
 import HostManager from "../../../lib/HostManager";
 import styles from "../../../styles/Home.module.css";
 import { CustomButtonGrey } from "../../../components/Material/CustomButton";
 import ArrowLeft from "@material-ui/icons/ArrowLeft";
+import config from "../../../config.json";
 
 class HostGame extends Component {
   state = {
@@ -182,12 +182,17 @@ class HostGame extends Component {
   };
 
   returnHome = () => {
-    if (!confirm("Are you sure you want to quit the current game and return to the home page?")) {
+    if (
+      config.confirmExit &&
+      !confirm(
+        "Are you sure you want to quit the current game and return to the home page?"
+      )
+    ) {
       return;
     }
 
     this.props.router.push("/");
-  }
+  };
 
   render() {
     const { gameCode } = this.props.router.query;
@@ -209,7 +214,9 @@ class HostGame extends Component {
         <h1 className={styles["heading-main"]}>
           Scatterbrain<span className={styles["heading-light"]}>.tv</span>
         </h1>
-        <CustomButtonGrey onClick={this.returnHome}><ArrowLeft /> Home</CustomButtonGrey>
+        <CustomButtonGrey onClick={this.returnHome}>
+          <ArrowLeft /> Home
+        </CustomButtonGrey>
         <div>Hosting game</div>
         <div>Game code: {gameCode}</div>
       </>
@@ -254,12 +261,18 @@ class HostGame extends Component {
 
     const qAndA = this.roundReviewToQNA(activeRoundReview);
 
-    return (
-      <Wrapper>
-        {header}
+    const debug = config.debug ? (
+      <>
         <div>{JSON.stringify(activeRoundReview)}</div>
         <div>{JSON.stringify(players)}</div>
         <div>{JSON.stringify(scoreAnswers)}</div>
+      </>
+    ) : null;
+
+    return (
+      <Wrapper>
+        {header}
+        {debug}
         <div>
           <h3>Question {reviewQuestionIndex + 1}</h3>
           <div>{qAndA[reviewQuestionIndex].question}</div>

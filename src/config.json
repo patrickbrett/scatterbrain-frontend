@@ -1,3 +1,5 @@
 {
-  "timerDuration": 30
+  "timerDuration": 30,
+  "confirmExit": false,
+  "debug": false
 }
