@@ -78,6 +78,8 @@ class PlayGame extends Component {
 
       console.log("Player: review go to next");
       this.setState({ reviewQuestionIndex: currentIndex + 1, answerMarks: {} });
+    } else if (event === "host-left") {
+      this.handleHostLeft()
     }
   };
 
@@ -116,6 +118,12 @@ class PlayGame extends Component {
 
     this.props.router.push("/");
   };
+
+  handleHostLeft = () => {
+    alert("The host has left the game. Returning to the homepage.")
+
+    this.props.router.push('/');
+  }
 
   render() {
     const { gameCode } = this.props.router.query;

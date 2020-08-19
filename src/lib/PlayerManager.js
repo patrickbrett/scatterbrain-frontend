@@ -45,6 +45,11 @@ export default class HostManager {
       console.log('[player] review next!', data)
       this.listener({ event: 'review-next-toplayer', ...data })
     })
+
+    socket.on('host-left', data => {
+      console.log('host left!', data)
+      this.listener({ event: 'host-left', ...data })
+    })
   }
 
   static getInstance() {

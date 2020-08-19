@@ -1,5 +1,4 @@
 import io from "socket.io-client";
-import config from "../config.json";
 
 export default class HostManager {
   static instance;
@@ -115,5 +114,12 @@ export default class HostManager {
   reviewNext(currentIndex) {
     const { hostCode, gameCode } = this;
     this.socket.emit("review-next", { hostCode, gameCode, currentIndex });
+  }
+
+  disconnect() {
+    this.players = []
+    this.hostCode = null;
+    this.gameCode = null;
+    this.socket.disconnect();
   }
 }

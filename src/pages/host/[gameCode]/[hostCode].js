@@ -200,6 +200,8 @@ class HostGame extends Component {
       return;
     }
 
+    const hostManager = HostManager.getInstance();
+    hostManager.disconnect();
     this.props.router.push("/");
   };
 
