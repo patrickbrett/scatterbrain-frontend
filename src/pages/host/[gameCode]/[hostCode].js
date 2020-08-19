@@ -76,6 +76,10 @@ class HostGame extends Component {
 
         const isMarkingComplete = this.checkIfMarkingIsComplete();
 
+        if (isMarkingComplete) {
+          this.notifyPlayersMarkingComplete();
+        }
+
         return { activeRoundReview, isMarkingComplete };
       });
     }
@@ -196,6 +200,15 @@ class HostGame extends Component {
     this.props.router.push("/");
   };
 
+  handleMarkingTimeout = () => {
+    this.setState({ isMarkingComplete: true })
+    this.notifyPlayersMarkingComplete()
+  }
+
+  notifyPlayersMarkingComplete = () => {
+    // TODO:
+  }
+
   render() {
     const { gameCode } = this.props.router.query;
     const {
@@ -304,14 +317,15 @@ class HostGame extends Component {
           </div>
         </div>
         <div>
-          {isMarkingComplete ? (
-            <Timer
-              message={(time) => `Time until next round auto starts: ${time}`}
+          {isMarkingComplete ? `Next round auto start: ${<Timer
               duration={10}
               onFinish={this.reviewNext}
-            />
+            />}`
           ) : (
-            "Waiting for players to review..."
+            `Waiting for players to review... ${<Timer
+              duration={30}
+              onFinish={this.handleMarkingTimeout}
+            />}`
           )}
         </div>
       </Wrapper>

@@ -6,10 +6,19 @@ import JoinBox from "../components/JoinBox";
 import { CustomButton, CustomButtonGrey } from "../components/Material/CustomButton";
 import Wrapper from "../components/Wrapper";
 import styles from "../styles/Home.module.css";
+import HostManager from "../lib/HostManager";
 
 export default class Home extends Component {
   state = {
     isHosting: false
+  }
+
+  stopHosting = () => {
+    this.setState({ isHosting: false });
+    const hostManager = HostManager.getInstance();
+    if (hostManager) {
+      hostManager.handleDisconnect();
+    }
   }
 
   render() {
@@ -17,7 +26,7 @@ export default class Home extends Component {
 
     return isHosting ? (
       <Wrapper>
-        <CustomButtonGrey onClick={() => this.setState({ isHosting: false })}><ArrowLeft /> Back</CustomButtonGrey>
+        <CustomButtonGrey onClick={this.stopHosting}><ArrowLeft /> Back</CustomButtonGrey>
         <HostBox />
       </Wrapper>
     ) : (

@@ -19,6 +19,7 @@ export default class HostManager {
     socket.on("new-player-joined", (data) => {
       const { playerName, isVip } = data;
       this.players.push({ playerName, isVip });
+      console.log('players now: ', this.players)
       this.playersRefreshListener(this.players);
     });
 
@@ -45,6 +46,15 @@ export default class HostManager {
     socket.on('marked-answer', data => {
       this.listener({ event: 'marked-answer', ...data })
     })
+    
+    socket.on('disconnect', () => {
+      this.handleDisconnect()
+    })
+  }
+
+  handleDisconnect() {
+    console.log('sock discon')
+    this.players = []
   }
 
   async createGame() {

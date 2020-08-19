@@ -60,7 +60,7 @@ class PlayGame extends Component {
     } else if (event === "start-round") {
       const { categoryList, letter } = data;
       const listAnswers = categoryList.categories.map(() => "");
-      this.setState({ categoryList, letter, listAnswers, roundStarted: true });
+      this.setState({ categoryList, letter, listAnswers, roundStarted: true, reviewStarted: false });
     } else if (event === "submissions-ready") {
       console.log("[player] submissions ready! active round:", activeRound);
       const { activeRound } = data;
