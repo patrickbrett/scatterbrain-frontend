@@ -11,7 +11,7 @@ export default class HostManager {
   listener;
 
   constructor() {
-    const socket = io(process.env.REACT_APP_WS_HOST, { transport : ['websocket'], secure: true });
+    const socket = io(process.env.NEXT_PUBLIC_WS_HOST, { transport : ['websocket'], secure: true });
     this.socket = socket;
 
     socket.on('join-game-accepted', data => {
