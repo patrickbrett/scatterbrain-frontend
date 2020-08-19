@@ -48,6 +48,12 @@ export default class Timer extends Component {
     if (intervalRef) clearInterval(intervalRef);
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.hash !== prevProps.hash) {
+      this.componentDidMount();
+    }
+  }
+
   render() {
     const { remainingDuration } = this.state;
     const durationSecs = Math.ceil(remainingDuration / 1000);

@@ -115,14 +115,17 @@ class HostGame extends Component {
       const submission = Object.values(activeRoundReview.submissions).find(
         (sub) => sub.playerName === player.playerName
       );
-      const marks = Object.values(submission.marks[reviewQuestionIndex]);
-      const acceptedMarks = marks.filter(Boolean);
-      const playerDidScore = acceptedMarks.length > marks.length / 2;
-
-      scoreAnswers[player.playerName] = playerDidScore;
-
-      if (playerDidScore) {
-        player.score += 100;
+      if (submission.marks[reviewQuestionIndex]) {
+        const marks = Object.values(submission.marks[reviewQuestionIndex]);
+        const acceptedMarks = marks.filter(Boolean);
+        const playerDidScore = acceptedMarks.length > marks.length / 2;
+        scoreAnswers[player.playerName] = playerDidScore;
+  
+        if (playerDidScore) {
+          player.score += 100;
+        }
+      } else {
+        scoreAnswers[player.playerName] = false;
       }
 
       return player;
@@ -201,6 +204,7 @@ class HostGame extends Component {
   };
 
   handleMarkingTimeout = () => {
+    this.scoreAnswers();
     this.setState({ isMarkingComplete: true })
     this.notifyPlayersMarkingComplete()
   }
@@ -232,7 +236,7 @@ class HostGame extends Component {
         <CustomButtonGrey onClick={this.returnHome}>
           <Cross /> Quit
         </CustomButtonGrey>
-            <div className={"game-code-box-abs"}>{gameCode}</div>
+            {/* <div className={"game-code-box-abs"}>{gameCode}</div> */}
       </>
     );
 
@@ -317,16 +321,18 @@ class HostGame extends Component {
           </div>
         </div>
         <div>
-          {isMarkingComplete ? `Next round auto start: ${<Timer
+          {isMarkingComplete ? <div>Next category in... <Timer
+              hash={reviewQuestionIndex + Math.random()}
               duration={10}
               onFinish={this.reviewNext}
-            />}`
-          ) : (
-            `Waiting for players to review... ${<Timer
+            /></div>
+           : 
+            <div>Waiting for players to review... <Timer
+              hash={reviewQuestionIndex + Math.random()}
               duration={30}
               onFinish={this.handleMarkingTimeout}
-            />}`
-          )}
+            /></div>
+          }
         </div>
       </Wrapper>
     );
