@@ -12,6 +12,7 @@ export default class HostManager {
   constructor() {
     this.players = [];
 
+    console.log('prenv', process.env.NEXT_PUBLIC_WS_HOST);
     const socket = io(process.env.NEXT_PUBLIC_WS_HOST, { transport : ['websocket'] });
     this.socket = socket;
 
@@ -52,6 +53,7 @@ export default class HostManager {
   }
 
   handleDisconnect() {
+    this.socket.disconnect();
     console.log('sock discon')
     this.players = []
   }
