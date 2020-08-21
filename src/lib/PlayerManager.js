@@ -12,7 +12,7 @@ export default class HostManager {
 
   constructor() {
     console.log('prenv2', process.env.NEXT_PUBLIC_WS_HOST);
-    const socket = io(process.env.NEXT_PUBLIC_WS_HOST, { transport : ['websocket'], secure: true });
+    const socket = io(process.env.NEXT_PUBLIC_WS_HOST || 'wss://api.scatterbrain.tv:443', { transport : ['websocket'], secure: true });
     this.socket = socket;
 
     socket.on('join-game-accepted', data => {

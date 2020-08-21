@@ -13,7 +13,7 @@ export default class HostManager {
     this.players = [];
 
     console.log('prenv', process.env.NEXT_PUBLIC_WS_HOST);
-    const socket = io(process.env.NEXT_PUBLIC_WS_HOST, { transport : ['websocket'] });
+    const socket = io(process.env.NEXT_PUBLIC_WS_HOST || 'wss://api.scatterbrain.tv:443', { transport : ['websocket'] });
     this.socket = socket;
 
     socket.on("new-player-joined", (data) => {
